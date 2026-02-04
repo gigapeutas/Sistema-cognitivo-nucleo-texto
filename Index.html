@@ -195,6 +195,8 @@
       border: 1px solid transparent;
       transition: .15s ease;
       font-weight: 700;
+      color: rgba(240,255,250,.92); /* garante contraste em <button> no mobile */
+      -webkit-tap-highlight-color: transparent;
     }
     .btn-primary{
       background: rgba(0,255,140,.16);
@@ -279,13 +281,15 @@
       font-size: 12px;
     }
     .btn-dark{
-      background: rgba(255,255,255,.04);
-      border-color: rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.14);
+      color: rgba(240,255,250,.90);
     }
     .btn-dark:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
     .btn-neon{
-      background: rgba(0,255,140,.16);
-      border-color: rgba(0,255,140,.28);
+      background: rgba(0,255,140,.18);
+      border-color: rgba(0,255,140,.34);
+      color: rgba(240,255,250,.95);
     }
     .btn-neon:hover{ background: rgba(0,255,140,.22); transform: translateY(-1px); }
     .out{
@@ -293,6 +297,14 @@
       min-height: 140px;
       white-space: pre-wrap;
     }
+
+    button:disabled,
+    .btn:disabled{
+      opacity: .55;
+      cursor: not-allowed;
+      filter: grayscale(.1);
+    }
+
 
     /* helpful */
     .tip{
