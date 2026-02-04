@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConSySencI.A — Sistema Cognitivo | Núcleo de Texto (IA)</title>
+  <meta name="description" content="Sistema Cognitivo — Núcleo de Texto (IA). Operação institucional de IA com menu por finalidade, seções retráteis e geradores prontos para copiar/colar." />
+  <meta name="theme-color" content="#070A12" />
+
+  <style>
+    :root{
+      --bg:#050812;
+      --panel:#070A12;
+      --panel2:rgba(0,0,0,.18);
+      --text:rgba(240,255,250,.92);
+      --muted:rgba(240,255,250,.72);
+      --line:rgba(255,255,255,.08);
+      --neon:rgba(0,255,140,1);
+      --neonSoft:rgba(0,255,140,.14);
+      --neonSoft2:rgba(0,255,140,.06);
+      --shadow:0 18px 60px rgba(0,0,0,.55);
+      --radius:16px;
+      --radius2:14px;
+      --max:1100px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", sans-serif;
+      background: radial-gradient(900px 520px at 12% 8%, rgba(0,255,140,.10), transparent 55%),
+                  radial-gradient(900px 520px at 88% 16%, rgba(0,160,255,.08), transparent 58%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    a{ color:inherit; }
+    .wrap{ max-width: var(--max); margin:0 auto; padding: 0 14px; }
+    .topHero{
+      padding: 22px 0 12px 0;
+    }
+    .kicker{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--neonSoft);
+      background: var(--neonSoft2);
+      color: rgba(230,255,245,.92);
+      font-size:12px;
+    }
+    .h1{
+      margin: 14px 0 6px 0;
+      font-size: 20px;
+      letter-spacing:.2px;
+      font-weight: 800;
+    }
+    .sub{
+      margin: 0 0 16px 0;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 880px;
+    }
+
+    /* NAV sticky */
+    .cs-nav{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(5, 8, 18, .78);
+      border-bottom: 1px solid var(--neonSoft);
+    }
+    .cs-nav__inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 12px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cs-nav__brand{
+      font-weight: 800;
+      letter-spacing: .6px;
+      opacity: .95;
+      white-space: nowrap;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: rgba(0,255,140,.75);
+      box-shadow: 0 0 18px rgba(0,255,140,.35);
+      flex:0 0 auto;
+    }
+    .cs-nav__chips{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .chip{
+      text-decoration:none;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,140,.18);
+      background: rgba(0,255,140,.06);
+      color: rgba(230,255,245,.92);
+      font-size: 12px;
+      line-height: 1;
+      transition: .15s ease;
+    }
+    .chip:hover{ background: rgba(0,255,140,.10); transform: translateY(-1px); }
+
+    /* Sections + details */
+    .cs-section{ max-width: var(--max); margin: 18px auto; padding: 0 14px; }
+
+    .cs-details{
+      border: 1px solid rgba(0,255,140,.14);
+      border-radius: var(--radius);
+      background: rgba(7, 10, 18, .75);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .cs-summary{
+      cursor:pointer;
+      list-style:none;
+      padding: 14px 14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content: space-between;
+      user-select:none;
+    }
+    .cs-summary::-webkit-details-marker{ display:none; }
+    .cs-summary__title{
+      font-weight: 800;
+      font-size: 14px;
+      color: rgba(240,255,250,.95);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .badge{
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      color: rgba(240,255,250,.82);
+      font-weight: 700;
+    }
+    .cs-summary__meta{
+      font-size: 12px;
+      opacity: .78;
+      white-space: nowrap;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .chev{
+      width: 26px;height: 26px;border-radius: 10px;
+      display:inline-flex;align-items:center;justify-content:center;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      transition:.15s ease;
+      font-weight: 900;
+    }
+    details[open] .chev{ transform: rotate(180deg); }
+
+    .cs-ctaRow{
+      display:flex;
+      gap:10px;
+      padding: 0 14px 12px 14px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,.06);
+      margin-top: 2px;
+      padding-top: 12px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-size: 12px;
+      border: 1px solid transparent;
+      transition: .15s ease;
+      font-weight: 700;
+    }
+    .btn-primary{
+      background: rgba(0,255,140,.16);
+      border-color: rgba(0,255,140,.26);
+      color: rgba(240,255,250,.95);
+    }
+    .btn-primary:hover{ background: rgba(0,255,140,.22); transform: translateY(-1px); }
+    .btn-ghost{
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.08);
+      color: rgba(240,255,250,.90);
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
+
+    .cs-content{ padding: 0 14px 14px 14px; }
+    .cs-sub{
+      padding: 12px 12px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.18);
+      margin-top: 10px;
+    }
+    .cs-sub h3{
+      margin: 2px 0 8px 0;
+      font-size: 13px;
+      letter-spacing:.2px;
+    }
+    .p{
+      margin: 8px 0;
+      color: rgba(240,255,250,.84);
+      font-size: 12.8px;
+    }
+    .muted{ color: var(--muted); }
+    .hr{
+      height:1px; background: rgba(255,255,255,.06);
+      margin: 10px 0;
+    }
+    ul{ margin: 8px 0 0 18px; padding:0; }
+    li{ margin: 6px 0; color: rgba(240,255,250,.86); font-size: 12.8px; }
+    code, pre, textarea, input, select, button{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* Generator UI */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media(min-width: 920px){
+      .grid{ grid-template-columns: 1.2fr .8fr; }
+    }
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label{
+      font-size: 12px;
+      color: rgba(240,255,250,.78);
+      font-weight: 700;
+    }
+    textarea, input, select{
+      width:100%;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.22);
+      color: rgba(240,255,250,.92);
+      outline:none;
+    }
+    textarea{ min-height: 110px; resize: vertical; }
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .btn-small{
+      padding: 9px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+    .btn-dark{
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.10);
+    }
+    .btn-dark:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
+    .btn-neon{
+      background: rgba(0,255,140,.16);
+      border-color: rgba(0,255,140,.28);
+    }
+    .btn-neon:hover{ background: rgba(0,255,140,.22); transform: translateY(-1px); }
+    .out{
+      width:100%;
+      min-height: 140px;
+      white-space: pre-wrap;
+    }
+
+    /* helpful */
+    .tip{
+      font-size: 12px;
+      color: rgba(240,255,250,.74);
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,255,140,.12);
+      background: rgba(0,255,140,.05);
+    }
+
+    /* offset for sticky nav */
+    :target{ scroll-margin-top: 92px; }
+
+    /* footer */
+    footer{
+      margin: 22px 0 40px 0;
+      color: rgba(240,255,250,.62);
+      font-size: 12px;
+      text-align: center;
+    }
+    .fine{
+      opacity:.72;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENU DE ATALHOS — FINALIDADES -->
+  <nav class="cs-nav" aria-label="Menu ConSySencI.A">
+    <div class="cs-nav__inner">
+      <div class="cs-nav__brand"><span class="dot"></span>ConSySencI.A</div>
+
+      <div class="cs-nav__chips">
+        <a class="chip" href="#sec-escolher-ia">Escolher IA certa</a>
+        <a class="chip" href="#sec-prompt-perfeito">Gerar Prompt perfeito</a>
+        <a class="chip" href="#sec-copiar-colar">Copiar / Colar sem erro</a>
+        <a class="chip" href="#sec-corrigir-generico">Corrigir genérico</a>
+        <a class="chip" href="#sec-objeções">Objeções</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="topHero">
+    <div class="wrap">
+      <div class="kicker">SISTEMA COGNITIVO — NÚCLEO DE TEXTO (IA)</div>
+      <div class="h1">Operação institucional de IA com menu por finalidade</div>
+      <p class="sub">
+        Estrutura retrátil para reduzir tempo de tela: o usuário entra por finalidade, executa com o gerador e aprofunda a estrutura apenas quando necessário.
+      </p>
+    </div>
+  </header>
+
+  <!-- SEÇÃO 1 -->
+  <section id="sec-escolher-ia" class="cs-section">
+    <details class="cs-details">
+      <summary class="cs-summary">
+        <span class="cs-summary__title">
+          <span class="badge">Finalidade</span> IA para escolher a ferramenta certa
+        </span>
+        <span class="cs-summary__meta">Abrir conteúdo <span class="chev">⌄</span></span>
+      </summary>
+
+      <div class="cs-ctaRow">
+        <a class="btn btn-ghost" href="#sec-escolher-ia-estrutura">Entender estrutura</a>
+        <a class="btn btn-primary" href="#sec-escolher-ia-gerador">Gerador de prompt</a>
+      </div>
+
+      <div class="cs-content">
+        <div id="sec-escolher-ia-estrutura" class="cs-sub">
+          <h3>Estrutura (padrão multinacional)</h3>
+          <p class="p">
+            Use o critério de <b>finalidade</b> e <b>perfil de entrega</b> — não “qual é mais famosa”.
+          </p>
+          <div class="hr"></div>
+          <ul>
+            <li><b>ChatGPT</b>: operação generalista, escrita, estruturação e variações com controle.</li>
+            <li><b>Claude</b>: síntese longa, clareza em documentos e tom institucional consistente.</li>
+            <li><b>Gemini</b>: integração com ecossistemas Google e tarefas de produtividade.</li>
+            <li><b>Perplexity</b>: pesquisa com referências (quando a tarefa exige fonte).</li>
+          </ul>
+          <p class="p muted">
+            Regra: se o objetivo é execução e padrão, comece com ChatGPT/Claude. Se o objetivo é pesquisa citada, use Perplexity.
+          </p>
+        </div>
+
+        <div id="sec-escolher-ia-gerador" class="cs-sub">
+          <h3>Gerador (seleção de IA → prompt pronto)</h3>
+          <p class="p muted">Digite sua ideia, escolha a IA e gere um prompt operável.</p>
+
+          <div class="grid">
+            <div class="field">
+              <label for="idea1">Digite sua ideia</label>
+              <textarea id="idea1" placeholder="Ex.: Preciso criar um documento institucional descrevendo um produto com padrão multinacional."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="ia1">Selecione a IA</label>
+              <select id="ia1">
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Claude">Claude</option>
+                <option value="Gemini">Gemini</option>
+                <option value="Perplexity">Perplexity</option>
+              </select>
+
+              <div class="tip">
+                Produção: ChatGPT/Claude<br/>
+                Pesquisa citada: Perplexity<br/>
+                Integração Google: Gemini
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-small btn-neon" type="button" onclick="generatePrompt('1')">Gerar prompt</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="copyOut('out1')">Copiar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="downloadOut('out1','consysencia-prompt-escolher-ia.txt')">Baixar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="clearAll('idea1','out1')">Limpar</button>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="out1">Prompt gerado</label>
+            <textarea id="out1" class="out" placeholder="O prompt aparecerá aqui."></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- SEÇÃO 2 -->
+  <section id="sec-prompt-perfeito" class="cs-section">
+    <details class="cs-details">
+      <summary class="cs-summary">
+        <span class="cs-summary__title">
+          <span class="badge">Finalidade</span> IA para gerar prompt perfeito
+        </span>
+        <span class="cs-summary__meta">Abrir conteúdo <span class="chev">⌄</span></span>
+      </summary>
+
+      <div class="cs-ctaRow">
+        <a class="btn btn-ghost" href="#sec-prompt-perfeito-estrutura">Entender estrutura</a>
+        <a class="btn btn-primary" href="#sec-prompt-perfeito-gerador">Gerador de prompt</a>
+      </div>
+
+      <div class="cs-content">
+        <div id="sec-prompt-perfeito-estrutura" class="cs-sub">
+          <h3>Estrutura de prompt (padrão corporativo)</h3>
+          <p class="p">Um prompt institucional é um <b>briefing técnico</b>.</p>
+          <div class="hr"></div>
+          <ul>
+            <li><b>Contexto</b>: o que é e onde será usado.</li>
+            <li><b>Objetivo</b>: o que deve sair no final.</li>
+            <li><b>Formato</b>: estrutura de entrega (títulos, tópicos, tabela, etc.).</li>
+            <li><b>Restrições</b>: tom, termos proibidos, limites e compliance.</li>
+            <li><b>Validação</b>: checklist do que deve estar presente.</li>
+          </ul>
+        </div>
+
+        <div id="sec-prompt-perfeito-gerador" class="cs-sub">
+          <h3>Gerador de prompt “Briefing Multinacional”</h3>
+
+          <div class="grid">
+            <div class="field">
+              <label for="idea2">Digite sua ideia</label>
+              <textarea id="idea2" placeholder="Ex.: Criar descrição institucional de um sistema cognitivo com linguagem técnica e sem marketing."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="ia2">Selecione a IA</label>
+              <select id="ia2">
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Claude">Claude</option>
+                <option value="Gemini">Gemini</option>
+                <option value="Perplexity">Perplexity</option>
+              </select>
+
+              <label for="format2" style="margin-top:10px;">Formato de entrega</label>
+              <select id="format2">
+                <option value="Documento estruturado">Documento estruturado</option>
+                <option value="Checklist operacional">Checklist operacional</option>
+                <option value="Especificação técnica">Especificação técnica</option>
+                <option value="Página institucional (HTML copy)">Página institucional (HTML copy)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-small btn-neon" type="button" onclick="generatePrompt('2')">Gerar prompt</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="copyOut('out2')">Copiar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="downloadOut('out2','consysencia-prompt-perfeito.txt')">Baixar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="clearAll('idea2','out2')">Limpar</button>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="out2">Prompt gerado</label>
+            <textarea id="out2" class="out" placeholder="O prompt aparecerá aqui."></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- SEÇÃO 3 -->
+  <section id="sec-copiar-colar" class="cs-section">
+    <details class="cs-details">
+      <summary class="cs-summary">
+        <span class="cs-summary__title">
+          <span class="badge">Finalidade</span> Copiar / colar sem erro
+        </span>
+        <span class="cs-summary__meta">Abrir conteúdo <span class="chev">⌄</span></span>
+      </summary>
+
+      <div class="cs-ctaRow">
+        <a class="btn btn-ghost" href="#sec-copiar-colar-estrutura">Entender estrutura</a>
+        <a class="btn btn-primary" href="#sec-copiar-colar-gerador">Gerador de prompt</a>
+      </div>
+
+      <div class="cs-content">
+        <div id="sec-copiar-colar-estrutura" class="cs-sub">
+          <h3>Estrutura (redução de erro operacional)</h3>
+          <ul>
+            <li>Evite caracteres “decorativos” em links e prompts (ex.: *, #, [ ]).</li>
+            <li>Use <b>prompt em bloco único</b> (uma peça) para não quebrar a intenção.</li>
+            <li>Ao colar no WhatsApp/Docs, valide se quebras de linha foram preservadas.</li>
+          </ul>
+          <p class="p muted">Se algo “quebrar”, não reescreva do zero: rode o Prompt Auditor (abaixo).</p>
+        </div>
+
+        <div id="sec-copiar-colar-gerador" class="cs-sub">
+          <h3>Prompt Auditor (corrige prompt quebrado)</h3>
+
+          <div class="grid">
+            <div class="field">
+              <label for="idea3">Cole aqui o prompt que ficou ruim/quebrado</label>
+              <textarea id="idea3" placeholder="Cole o prompt aqui."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="ia3">Selecione a IA</label>
+              <select id="ia3">
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Claude">Claude</option>
+                <option value="Gemini">Gemini</option>
+                <option value="Perplexity">Perplexity</option>
+              </select>
+
+              <div class="tip">
+                Auditor padroniza:<br/>
+                • clareza<br/>
+                • formato<br/>
+                • restrições<br/>
+                • checklist
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-small btn-neon" type="button" onclick="generatePrompt('3')">Gerar auditoria</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="copyOut('out3')">Copiar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="downloadOut('out3','consysencia-prompt-auditor.txt')">Baixar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="clearAll('idea3','out3')">Limpar</button>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="out3">Prompt corrigido</label>
+            <textarea id="out3" class="out" placeholder="O resultado aparecerá aqui."></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- SEÇÃO 4 -->
+  <section id="sec-corrigir-generico" class="cs-section">
+    <details class="cs-details">
+      <summary class="cs-summary">
+        <span class="cs-summary__title">
+          <span class="badge">Finalidade</span> Corrigir resposta genérica
+        </span>
+        <span class="cs-summary__meta">Abrir conteúdo <span class="chev">⌄</span></span>
+      </summary>
+
+      <div class="cs-ctaRow">
+        <a class="btn btn-ghost" href="#sec-corrigir-generico-estrutura">Entender estrutura</a>
+        <a class="btn btn-primary" href="#sec-corrigir-generico-gerador">Gerador de prompt</a>
+      </div>
+
+      <div class="cs-content">
+        <div id="sec-corrigir-generico-estrutura" class="cs-sub">
+          <h3>Estrutura (de genérico → específico)</h3>
+          <ul>
+            <li>Exija <b>assunções explícitas</b> (“o que você está assumindo?”).</li>
+            <li>Imponha <b>formato</b> (tópicos, etapas, critérios, checklist).</li>
+            <li>Peça <b>perguntas mínimas</b> antes da resposta final (máx. 3).</li>
+            <li>Solicite <b>versão 1</b> + <b>auditoria</b> do que pode estar fraco.</li>
+          </ul>
+        </div>
+
+        <div id="sec-corrigir-generico-gerador" class="cs-sub">
+          <h3>Gerador “Anti-genérico”</h3>
+
+          <div class="grid">
+            <div class="field">
+              <label for="idea4">Cole a resposta genérica (ou descreva o problema)</label>
+              <textarea id="idea4" placeholder="Cole aqui a resposta genérica que recebeu."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="ia4">Selecione a IA</label>
+              <select id="ia4">
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Claude">Claude</option>
+                <option value="Gemini">Gemini</option>
+                <option value="Perplexity">Perplexity</option>
+              </select>
+
+              <label for="depth4" style="margin-top:10px;">Nível de aprofundamento</label>
+              <select id="depth4">
+                <option value="Baixo">Baixo</option>
+                <option value="Médio" selected>Médio</option>
+                <option value="Alto">Alto</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-small btn-neon" type="button" onclick="generatePrompt('4')">Gerar prompt</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="copyOut('out4')">Copiar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="downloadOut('out4','consysencia-anti-generico.txt')">Baixar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="clearAll('idea4','out4')">Limpar</button>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="out4">Prompt gerado</label>
+            <textarea id="out4" class="out" placeholder="O prompt aparecerá aqui."></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- SEÇÃO 5 -->
+  <section id="sec-objeções" class="cs-section">
+    <details class="cs-details">
+      <summary class="cs-summary">
+        <span class="cs-summary__title">
+          <span class="badge">Finalidade</span> Objeções (respostas operacionais)
+        </span>
+        <span class="cs-summary__meta">Abrir conteúdo <span class="chev">⌄</span></span>
+      </summary>
+
+      <div class="cs-ctaRow">
+        <a class="btn btn-ghost" href="#sec-objeções-estrutura">Entender estrutura</a>
+        <a class="btn btn-primary" href="#sec-objeções-gerador">Gerador de prompt</a>
+      </div>
+
+      <div class="cs-content">
+        <div id="sec-objeções-estrutura" class="cs-sub">
+          <h3>Respostas objetivas</h3>
+          <ul>
+            <li><b>“Não sei criar prompt”</b> → use o Gerador e ajuste apenas o objetivo.</li>
+            <li><b>“A IA responde genérico”</b> → use Anti-genérico e imponha formato + checklist.</li>
+            <li><b>“Não sei qual IA usar”</b> → use a seção “Escolher IA certa”.</li>
+            <li><b>“Tenho medo de copiar errado”</b> → use o Prompt Auditor.</li>
+            <li><b>“Quero padrão profissional”</b> → use “Prompt Perfeito — Briefing Multinacional”.</li>
+          </ul>
+          <p class="p muted">O sistema resolve objeções por estrutura, não por persuasão.</p>
+        </div>
+
+        <div id="sec-objeções-gerador" class="cs-sub">
+          <h3>Criador de Prompts (prompt que cria prompt)</h3>
+
+          <div class="grid">
+            <div class="field">
+              <label for="idea5">Digite sua ideia (o sistema cria o melhor prompt para isso)</label>
+              <textarea id="idea5" placeholder="Ex.: Quero transformar um texto em um SOP com checklist e critérios de validação."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="ia5">Selecione a IA</label>
+              <select id="ia5">
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Claude">Claude</option>
+                <option value="Gemini">Gemini</option>
+                <option value="Perplexity">Perplexity</option>
+              </select>
+
+              <label for="style5" style="margin-top:10px;">Tom</label>
+              <select id="style5">
+                <option value="Institucional" selected>Institucional</option>
+                <option value="Técnico">Técnico</option>
+                <option value="Operacional">Operacional</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-small btn-neon" type="button" onclick="generatePrompt('5')">Gerar prompt</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="copyOut('out5')">Copiar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="downloadOut('out5','consysencia-criador-de-prompts.txt')">Baixar</button>
+            <button class="btn btn-small btn-dark" type="button" onclick="clearAll('idea5','out5')">Limpar</button>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="out5">Prompt gerado</label>
+            <textarea id="out5" class="out" placeholder="O prompt aparecerá aqui."></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <footer class="wrap">
+    <div>© ConSySencI.A — Todos os direitos reservados</div>
+    <div class="fine">Sistema Cognitivo Unificado • Núcleo de Texto (IA)</div>
+  </footer>
+
+  <script>
+    // Abrir automaticamente a seção correta ao clicar em âncoras (menu/CTAs)
+    (function(){
+      function openDetailsForHash(){
+        const hash = window.location.hash;
+        if(!hash) return;
+
+        const el = document.querySelector(hash);
+        if(!el) return;
+
+        const details = el.closest('details');
+        if(details && !details.open){
+          details.open = true;
+        }
+
+        setTimeout(() => {
+          el.scrollIntoView({behavior:'smooth', block:'start'});
+        }, 60);
+      }
+
+      window.addEventListener('hashchange', openDetailsForHash);
+      window.addEventListener('DOMContentLoaded', openDetailsForHash);
+    })();
+
+    // Geradores — prompts prontos por finalidade
+    function generatePrompt(which){
+      const idea = document.getElementById('idea'+which)?.value?.trim() || '';
+      const ia = document.getElementById('ia'+which)?.value || 'ChatGPT';
+
+      if(!idea){
+        alert('Insira um conteúdo no campo de entrada.');
+        return;
+      }
+
+      let out = '';
+
+      if(which === '1'){
+        out =
+`Você é um operador institucional. Sua função é escolher a melhor IA para executar a tarefa, sem marketing e sem hype.
+
+TAREFA (entrada):
+${idea}
+
+INSTRUÇÕES:
+1) Classifique a tarefa por tipo (produção / síntese longa / pesquisa citada / integração).
+2) Escolha UMA IA principal entre: ChatGPT, Claude, Gemini, Perplexity.
+3) Justifique em 5 linhas no máximo, com critérios objetivos.
+4) Entregue um PROMPT FINAL pronto para colar na IA escolhida, com:
+   - Contexto
+   - Objetivo
+   - Formato de entrega
+   - Restrições (tom institucional, sem promessas)
+   - Checklist de validação
+
+SAÍDA:
+- IA escolhida: (nome)
+- Critérios: (curto)
+- Prompt final: (bloco único)`;
+      }
+
+      if(which === '2'){
+        const format = document.getElementById('format2')?.value || 'Documento estruturado';
+        out =
+`Você é um redator técnico institucional. Gere um prompt corporativo (briefing) para a IA ${ia}.
+
+IDEIA (entrada):
+${idea}
+
+FORMATO DE ENTREGA OBRIGATÓRIO:
+${format}
+
+REGRAS:
+- Linguagem institucional e técnica.
+- Proibido: hype, promessas, “fique rico”, “garantido”, “imperdível”, “o melhor do mundo”.
+- Saída objetiva, com títulos, tópicos e checklist.
+
+ENTREGUE:
+1) Um PROMPT FINAL (bloco único) pronto para colar.
+2) Um CHECKLIST de validação (5 a 10 itens).
+3) 3 PERGUNTAS mínimas que, se respondidas, melhoram a precisão (sem travar a execução).`;
+      }
+
+      if(which === '3'){
+        out =
+`Você é um Auditor de Prompt. Sua função é corrigir e padronizar um prompt quebrado para operação institucional.
+
+PROMPT ORIGINAL (entrada):
+${idea}
+
+OBJETIVO:
+- Transformar em um prompt corporativo claro, executável e consistente.
+
+REGRAS:
+- Preserve a intenção original.
+- Remova caracteres que atrapalham cópia/cola.
+- Imponha estrutura: Contexto → Objetivo → Formato → Restrições → Checklist.
+- Não use marketing ou promessas.
+
+ENTREGUE:
+1) PROMPT CORRIGIDO (bloco único).
+2) NOTAS (máx. 6 linhas) explicando o que foi ajustado e por quê.`;
+      }
+
+      if(which === '4'){
+        const depth = document.getElementById('depth4')?.value || 'Médio';
+        out =
+`Você é um operador técnico. Recebi uma resposta genérica e preciso elevar para um nível específico e útil.
+
+ENTRADA (resposta genérica ou problema):
+${idea}
+
+NÍVEL DE APROFUNDAMENTO: ${depth}
+
+REGRAS:
+- Sem marketing. Sem frases vazias.
+- Exija assunções explícitas.
+- Entregue em formato operacional.
+
+ENTREGUE:
+1) Reescrita específica (com passos).
+2) Critérios de decisão (quando escolher A vs B).
+3) Checklist de validação.
+4) Uma versão curta (executiva) e uma versão completa (técnica).
+5) 3 perguntas mínimas (máx.) que aumentam precisão sem travar execução.`;
+      }
+
+      if(which === '5'){
+        const style = document.getElementById('style5')?.value || 'Institucional';
+        out =
+`Você é um Criador de Prompts. Sua saída é um prompt final que cria o melhor resultado possível.
+
+IDEIA (entrada):
+${idea}
+
+IA ALVO: ${ia}
+TOM: ${style}
+
+REGRAS:
+- Padrão multinacional.
+- Sem hype e sem promessas.
+- Saída final deve ser um PROMPT ÚNICO pronto para colar.
+
+O PROMPT FINAL deve conter:
+1) Papel do modelo (função técnica)
+2) Contexto mínimo
+3) Objetivo inequívoco
+4) Formato de entrega com estrutura
+5) Restrições (tom, termos proibidos, limites)
+6) Checklist de validação
+7) “Se estiver faltando informação, faça no máximo 3 perguntas e prossiga com assunções explícitas.”`;
+      }
+
+      document.getElementById('out'+which).value = out;
+    }
+
+    // Copiar / baixar / limpar
+    async function copyOut(id){
+      const el = document.getElementById(id);
+      const text = el.value.trim();
+      if(!text){ alert('Nada para copiar.'); return; }
+
+      try{
+        await navigator.clipboard.writeText(text);
+        alert('Copiado para a área de transferência.');
+      }catch(e){
+        // fallback
+        el.select();
+        document.execCommand('copy');
+        alert('Copiado (modo compatibilidade).');
+      }
+    }
+
+    function downloadOut(id, filename){
+      const el = document.getElementById(id);
+      const text = el.value.trim();
+      if(!text){ alert('Nada para baixar.'); return; }
+
+      const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename || 'consysencia.txt';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function clearAll(ideaId, outId){
+      const i = document.getElementById(ideaId);
+      const o = document.getElementById(outId);
+      if(i) i.value = '';
+      if(o) o.value = '';
+    }
+  </script>
+
+</body>
+</html>
